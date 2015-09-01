@@ -11,8 +11,27 @@
     - name: Apt-get Update
       apt: update_cache=yes
 
-    - name: Install Prerequisites
+    - name: Install Git
       apt: name=git
+
+    - name: Install Build essentials
+      apt: name=build-essential
+
+    - name: Install python-dev
+      apt: name=python-dev
+
+    - name: Install python-tox
+      apt: name=python-tox
+
+    - name: Install Prerequisites
+      apt: name=python-pip
+
+    - name: Install python-tox   
+      apt: name=libssl-dev
+
+    - name: Install Prerequisites
+      apt: name=libffi-dev
+
   tasks:
    - name: Create Stack User
      user: name={{ stack_user }}
@@ -28,19 +47,7 @@
            group=root
            mode=0440
 
-   - name: Clone devstack repo
+   - name: Clone Anchor
      sudo_user: stack
-     git: repo=https://git.openstack.org/openstack-dev/devstack
+     git: repo=https://git.openstack.org/openstack/anchor
           dest={{ devstack_dir }}
-
-
-   - name: Copy local.conf for devstack
-     sudo_user: stack
-     copy: src=local.conf
-           dest="{{ devstack_dir }}/local.conf"
-
-   - name: Start devstack
-     sudo_user: stack
-     shell: ./stack.sh
-     args:
-            chdir: "{{ devstack_dir }}"
