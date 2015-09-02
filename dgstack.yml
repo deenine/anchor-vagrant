@@ -5,7 +5,7 @@
     stack_home: /home/{{ stack_user }}
     #password: StackPassword
     stack_password: "iPxoMYWOri3eg"
-    devstack_dir: "{{ stack_home }}/devstack"
+    anchor_dir: "{{ stack_home }}/anchor"
   sudo: yes
   pre_tasks:
     - name: Apt-get Update
@@ -50,4 +50,12 @@
    - name: Clone Anchor
      sudo_user: stack
      git: repo=https://git.openstack.org/openstack/anchor
-          dest={{ devstack_dir }}
+          dest={{ anchor_dir }}
+
+   - name: Create Anchor venv
+     sudo_user: stack
+     shell: virtualenv venv chdir="{{ anchor_dir }}"
+
+   - name: Install Anchor Requirements
+     sudo_user: stack
+     pip: requirements="{{ anchor_dir }}/requirements.txt" virtualenv="{{ anchor_dir }}/venv"
